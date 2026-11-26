@@ -78,8 +78,13 @@ fun AppUi(c: AppController) {
                 }
                 Screen.CURRENCY -> Big("Identify this note") { c.readCurrency() }
                 Screen.SOS -> {
-                    Body("Starts a five second countdown, then texts and calls your saved contacts. Triple-press volume down also starts it.")
+                    Body("Starts a five second countdown. Then your first contact gets a WhatsApp message with your location, other contacts get a text if the server is set up, and your live location is shared. You must press send in WhatsApp. Triple-press volume down also starts it.")
                     if (c.sosActive) Big("Cancel S O S") { c.cancelSos() } else Big("S O S", danger = true) { c.triggerSos() }
+                    if (c.sharing) {
+                        val until = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(c.shareUntilMs))
+                        Body("Sharing your live location until $until.")
+                        Big("Stop sharing location") { c.stopSharing() }
+                    }
                 }
                 Screen.SETTINGS -> SettingsUi(c)
                 Screen.PRIVACY -> PrivacyUi(c)
@@ -132,6 +137,8 @@ private fun SettingsUi(c: AppController) {
     Big("Speech slower") { c.changeRate(-0.2f); refresh++ }
     Big("Speech faster") { c.changeRate(0.2f); refresh++ }
     Big("Cloud features: ${if (s.cloudEnabled) "on" else "off"}") { c.toggleCloud(); refresh++ }
+    Big("S O S opens: ${if (s.sosMethod == "whatsapp") "WhatsApp" else "phone call"}") { c.toggleSosMethod(); refresh++ }
+    Big("Share live location for ${s.shareHours} hours") { c.cycleShareHours(); refresh++ }
     OutlinedTextField(url, { url = it; s.backendUrl = it }, label = { Text("Server address, for example http://192.168.1.5:8000") },
         modifier = Modifier.fillMaxWidth(), singleLine = true)
     OutlinedTextField(key, { key = it; s.registerKey = it }, label = { Text("Server key, if your server needs one") },
@@ -157,7 +164,8 @@ private fun PrivacyUi(c: AppController) {
     Body("Obstacle detection runs on this phone and never sends pictures anywhere.")
     Body("Describe, ask, navigation and Kannada or Telugu reading send a photo or text to your server only when you use them, and only if cloud features are on.")
     Body("The server forwards photos to an AI provider. Do not photograph documents with private details such as bank or identity numbers.")
-    Body("Nothing is stored on the server by this app. Settings and contacts stay on this phone.")
+    Body("After an S O S, your position is sent to your server every 15 seconds. Anyone who has the share link can see where you are until it expires or you stop sharing. The link is sent only to your emergency contact.")
+    Body("Settings and contacts stay on this phone. The server keeps only your latest shared position, in memory, until the share ends.")
     Big("Cloud features: ${if (c.settings.cloudEnabled) "on" else "off"}") { c.toggleCloud(); refresh++ }
     Big("Delete all my data", danger = true) { c.deleteAllData(); refresh++ }
 }

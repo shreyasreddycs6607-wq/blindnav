@@ -31,6 +31,16 @@ class Settings(ctx: Context) {
         get() = p.getString("regkey", "")!!
         set(v) = p.edit().putString("regkey", v.trim()).apply()
 
+    /** "whatsapp" opens a WhatsApp chat with the SOS message; "call" rings the first contact. */
+    var sosMethod: String
+        get() = p.getString("sosMethod", "whatsapp")!!
+        set(v) = p.edit().putString("sosMethod", v).apply()
+
+    /** How long the live location link stays active after an SOS. The server caps it (default 15). */
+    var shareHours: Int
+        get() = p.getInt("shareHours", 8)
+        set(v) = p.edit().putInt("shareHours", v).apply()
+
     var token: String
         get() = p.getString("token", "")!!
         set(v) = p.edit().putString("token", v).apply()

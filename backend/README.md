@@ -6,7 +6,7 @@ Advisory cloud features only: scene description, questions, Kannada/Telugu OCR, 
 ## Run
 ```
 pip install -r requirements.txt
-python -m pytest -q                       # 17 tests, no network or keys needed
+python -m pytest -q                       # 19 tests, no network or keys needed
 set GEMINI_API_KEY=...                     # from Google AI Studio; keep keys in this server's environment, never in the app or in chat
 set GOOGLE_MAPS_API_KEY=...                # optional; also ANTHROPIC_API_KEY / OPENAI_API_KEY as fallbacks
 set BLINDNAV_SECRET=some-long-random-string
@@ -30,7 +30,15 @@ Point the app's Settings > Server address at `http://<this-pc-ip>:8000` (phone a
 
 ## Endpoints
 `GET /v1/health`, `POST /v1/auth/register`, `POST /v1/vision/scene`, `POST /v1/vision/ask`, `POST /v1/ocr/read`,
-`POST /v1/assistant/chat`, `GET /v1/nav/search`, `POST /v1/nav/route`, `POST /v1/emergency/notify`.
+`POST /v1/assistant/chat`, `GET /v1/nav/search`, `POST /v1/nav/route`, `POST /v1/emergency/notify`,
+and live location sharing: `POST /v1/track/start`, `POST /v1/track/{id}/update`, `POST /v1/track/{id}/stop`,
+`GET /v1/track/{id}` (public JSON) and `GET /t/{id}` (the page a contact opens, refreshes every 10 s).
+
+## Live location sharing (SOS)
+- `BLINDNAV_PUBLIC_URL`: the address contacts can reach, e.g. `https://blindnav.example.com`. **Required in practice:** if unset, the link uses the address the phone used, which on your home Wi-Fi (`http://192.168...`) nobody else can open. Host the server somewhere public with HTTPS (or use a tunnel) before relying on this.
+- `BLINDNAV_TRACK_MAX_HOURS` (default 15): the server caps any requested duration at this.
+- Shares live in memory only: restarting the server ends them. Max 3 live shares per device.
+- Anyone with the link can see the position until it expires or is stopped. The link id is random (128 bits) and the page is marked noindex, but treat the link as private.
 Errors are `{"error": {"code": "...", "message": "..."}}`. Interactive docs at `/docs` while running.
 
 ## Known limits

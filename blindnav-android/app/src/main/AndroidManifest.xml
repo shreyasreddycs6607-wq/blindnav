@@ -19,6 +19,8 @@
     <queries>
         <intent><action android:name="android.speech.RecognitionService" /></intent>
         <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
     </queries>
 
     <!-- usesCleartextTraffic lets you test against a server on your own Wi-Fi (http://192.168...).

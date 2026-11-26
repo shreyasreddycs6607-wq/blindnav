@@ -21,15 +21,16 @@ Everything here compiled and its unit tests pass, but the app has **never been r
 | Describe / ask | Photo + question to your server's AI. Keeps the last 3 exchanges | Yes |
 | Currency | On-device classifier **if you train and add `currency.tflite`**; otherwise a cloud guess; always says "confirm by feel" | Optional |
 | Navigation | Voice destination → place search → walking route → spoken turns, weak-GPS warning, off-route warning, arrival | Yes |
-| SOS | 5 s countdown with cancel (voice, any volume key, or button). Then server text to saved contacts (if online) and a phone call to the first contact | Texts only |
+| SOS | 5 s countdown with cancel (voice, any volume key, or button). Then, by default, **WhatsApp opens on a chat with your first contact, message and map link ready: someone must press Send** (WhatsApp does not let apps send for you). In parallel, if the server is set up, every contact gets a text, and your **live location is shared via a link for 1, 8 or 15 hours** (Settings). Setting "S O S opens: phone call" rings the first contact instead; it also does that if WhatsApp is not installed | WhatsApp needs internet; call works offline; live link and texts need the server |
+| Live location link | Position goes to your server every ~15 s from the foreground service (screen off is fine); contacts open the link in any browser. "Stop sharing location" button or say "stop sharing" ends it | Yes |
 | Triple volume-down = SOS | Works only while the app is open and the screen is on (not in the background) | No |
 | Background guidance | Foreground service + notification; guidance and navigation continue with the screen off | No / Yes for navigation |
 | Settings / privacy | Language, speech speed, cloud on/off (default **off**), server address, emergency contacts, delete all data | No |
 | Speech priority | SOS > hazard > your request > navigation > ambient; lower never cuts off higher | No |
 
 ## Tests
-`gradlew.bat :app:testDebugUnitTest`: 16 tests (hazard rules, route following, commands, script detection, SOS countdown, key presses). All pass.
-Backend: `python -m pytest -q` in `../backend`: 13 tests, all pass (AI and SMS providers are mocked).
+`gradlew.bat :app:testDebugUnitTest`: 21 tests (hazard rules, route following, commands, script detection, SOS countdown, key presses, SOS message and WhatsApp link). All pass.
+Backend: `python -m pytest -q` in `../backend`: 19 tests, all pass (AI, maps and SMS providers are mocked).
 **Not tested:** anything that needs a phone, camera, microphone, GPS, speech engine, or the real AI/SMS/routing services.
 
 ## Not done, and known problems
@@ -37,7 +38,9 @@ Backend: `python -m pytest -q` in `../backend`: 13 tests, all pass (AI and SMS p
 - **Hazard detection is limited:** COCO classes only. It will not recognise poles, potholes, open drains, stairs, auto-rickshaws, glass, or anything unknown. "Proximity" is how much of the frame an object fills, not metres. Thresholds in `HazardConfig` are uncalibrated guesses: tune them on your phone.
 - **Background running (new, untested on a phone):** a foreground service keeps obstacle guidance (camera) and navigation (GPS) going with the screen off or the app in the background, with a permanent notification and a "Stop guidance" button. It must be started while the app is on screen, and it is **not restarted** if Android kills it (the app then says "Obstacle guidance stopped. Use your cane" if it can). Some phone makers kill background apps aggressively: exempt BlindNav from battery optimisation. Still **not** working with the screen off: triple volume-down SOS, the "Speak a command" button, and reading/describe (they need the screen).
 - **Navigation stops if you close the app screen** (swipe it away); only guidance survives that.
-- **SOS limits:** the app cannot send SMS by itself offline (Google Play restricts that permission). Offline it only calls the first contact. Text alerts need the server, internet, and a Twilio account. Triple-press needs the app open. Test it with a contact who knows.
+- **SOS limits:** the app cannot send SMS or WhatsApp messages by itself (Google Play restricts SMS; WhatsApp has no API for it). A WhatsApp SOS is only sent when someone presses Send, which a person in distress may not manage: that is why the server text and the live link also go out. Offline it can only open WhatsApp (if it has data) or call. WhatsApp's own "share live location" can only be started inside WhatsApp, and its longest option is 8 hours (from memory, unverified), so this app uses its own link instead. Text alerts need the server and a Twilio account. Triple-press needs the app open. Test it with a contact who knows.
+- **Live link needs a public server.** The link points at `BLINDNAV_PUBLIC_URL` on your server. On home Wi-Fi nobody outside can open it. The link only works while the phone has signal and the app is alive; if updates stop, the page shows how old the last position is.
+- **Phone call vs WhatsApp:** only one app can come to the front. With WhatsApp selected the app does not also place a call.
 - **Languages:** hazard phrases are English only. Other speech needs the matching voice installed in the phone's text-to-speech settings; if it's missing the app says so and falls back to English. Offline speech recognition for Kannada/Telugu is unconfirmed and often needs internet.
 - **Security:** debug build, HTTP to your server is allowed (`usesCleartextTraffic`). The server login is anonymous with no device attestation. Fine for a test, not for release.
 - **Not validated** in the dark, rain, glare, crowds, or with blind users or an orientation-and-mobility instructor. Do that before relying on it for anything.

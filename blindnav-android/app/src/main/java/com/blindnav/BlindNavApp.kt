@@ -11,6 +11,7 @@ class BlindNavApp : Application() {
     val alerter by lazy { Alerter(this, settings) }
     val camera by lazy { CameraSession(this) }
     val live by lazy { LiveGuidance(this, alerter, camera) }
+    val share by lazy { LiveShare(this) }
 
     /** True while obstacle guidance is meant to be running. The service acts on this. */
     var liveOn by mutableStateOf(false)

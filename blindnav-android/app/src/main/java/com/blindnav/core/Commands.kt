@@ -8,6 +8,7 @@ sealed interface Command {
     data object Describe : Command
     data object Sos : Command
     data object CancelSos : Command
+    data object StopSharing : Command
     data object Repeat : Command
     data class Navigate(val destination: String) : Command
     data class Ask(val question: String) : Command
@@ -22,6 +23,7 @@ sealed interface Command {
 object CommandParser {
     private val sos = listOf("sos", "emergency", "help me", "call for help", "मदद", "बचाओ", "सहायता", "ಸಹಾಯ", "సహాయం", "madad", "bachao", "sahaya")
     private val cancel = listOf("cancel", "stop sos", "i am fine", "i'm fine", "रद्द", "ರದ್ದು", "రద్దు", "radd")
+    private val stopShare = listOf("stop sharing", "stop tracking", "stop location")
     private val stop = listOf("stop", "pause", "रुको", "बंद", "ನಿಲ್ಲಿಸು", "ఆపు", "ruko", "nillisu", "aapu")
     private val start = listOf("start", "begin guidance", "guide me", "शुरू", "ಪ್ರಾರಂಭ", "ప్రారంభం", "shuru")
     private val read = listOf("read", "what does it say", "पढ़ो", "पढ़", "ಓದು", "చదువు", "padho", "odu", "chaduvu")
@@ -43,6 +45,7 @@ object CommandParser {
         if (any(t, cancel)) return Command.CancelSos
         if (any(t, sos)) return Command.Sos
         navigate.firstOrNull { t.startsWith(it) }?.let { return Command.Navigate(t.removePrefix(it).trim()) }
+        if (any(t, stopShare)) return Command.StopSharing
         if (any(t, stop)) return Command.StopGuidance
         if (any(t, start)) return Command.StartGuidance
         if (any(t, currency)) return Command.Currency

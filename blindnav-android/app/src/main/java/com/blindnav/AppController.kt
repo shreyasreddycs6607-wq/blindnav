@@ -18,6 +18,8 @@ import com.blindnav.core.LatLon
 import com.blindnav.core.RouteTracker
 import com.blindnav.core.Script
 import com.blindnav.core.SosMachine
+import com.blindnav.core.SosMessage
+import com.blindnav.core.Whatsapp
 
 enum class Screen { HOME, LIVE, ASK, NAV, READER, CURRENCY, SOS, SETTINGS, PRIVACY }
 
@@ -61,7 +63,11 @@ class AppController(
         }
     }
 
-    fun go(s: Screen) { screen = s; status = "" }
+    fun go(s: Screen) {
+        screen = s; status = ""
+        // Ask now, not during an emergency: SOS needs the location and the phone-call permission.
+        if (s == Screen.SOS) ensure(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CALL_PHONE)) { }
+    }
 
     private fun say(text: String, p: Priority = Priority.USER) { status = text; alerter.say(text, p) }
 
@@ -275,20 +281,67 @@ class AppController(
         }
         say("Sending S O S.", Priority.SOS)
         val here = location.lastKnown()
-        val message = "SOS from a BlindNav user."
+        val hours = settings.shareHours
+        val first = contacts.first()
+
         fun callFirst(prefix: String) {
-            val c = contacts.first()
-            val uri = Uri.parse("tel:" + c.number)
+            val uri = Uri.parse("tel:" + first.number)
             val granted = ContextCompat.checkSelfPermission(act, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
             runCatching { act.startActivity(Intent(if (granted) Intent.ACTION_CALL else Intent.ACTION_DIAL, uri)) }
-            say(prefix + (if (granted) "Calling ${c.name}." else "Press call to ring ${c.name}."), Priority.SOS)
+            say(prefix + (if (granted) "Calling ${first.name}." else "Press call to ring ${first.name}."), Priority.SOS)
         }
-        if (cloudReady()) {
-            Bg.run({ backend.notifySos(contacts.map { it.number }, here, message) }) { r ->
-                r.onSuccess { sent -> callFirst("Text alert sent to ${sent.size} contact${if (sent.size == 1) "" else "s"}. ") }
-                    .onFailure { callFirst("Text alert failed. ") }
+
+        // Runs once: either when the live link is ready, or after 4 s without it. An emergency must not wait on the network.
+        val delivered = java.util.concurrent.atomic.AtomicBoolean(false)
+        fun deliver(liveUrl: String?) {
+            if (!delivered.compareAndSet(false, true)) return
+            if (cloudReady()) { // text every contact from the server, in parallel; its result is spoken a little later
+                val serverText = SosMessage.build(here, liveUrl, hours, includeLocation = false)
+                Bg.run({ backend.notifySos(contacts.map { it.number }, here, serverText) }) { r ->
+                    val note = r.fold({ "Text alert sent to ${it.size}." }, { "Text alert failed." })
+                    main.postDelayed({ say(note, Priority.SOS) }, 7000)
+                }
             }
-        } else callFirst("No internet alert. ")
+            val opened = settings.sosMethod == "whatsapp" && openWhatsApp(first, SosMessage.build(here, liveUrl, hours))
+            if (opened) {
+                val live = if (liveUrl != null) " Your live location is being shared for $hours hours." else " Live location is not available."
+                say("WhatsApp is open with your message to ${first.name}. Find the send button at the bottom right and press it.$live", Priority.SOS)
+            } else callFirst(if (settings.sosMethod == "whatsapp") "WhatsApp is not installed. " else "")
+        }
+
+        if (cloudReady()) {
+            main.postDelayed({ deliver(null) }, 4000)
+            Bg.run({ backend.trackStart(hours) }) { r ->
+                r.onSuccess { t ->
+                    if (delivered.get()) Bg.run({ backend.trackStop(t) }) { } // too late for the message: don't leave an unknown live link running
+                    else { app.share.begin(t); deliver(t.url) }
+                }.onFailure { deliver(null) }
+            }
+        } else deliver(null)
+    }
+
+    private fun openWhatsApp(c: Contact, text: String): Boolean {
+        val uri = Uri.parse(Whatsapp.url(c.number, text))
+        for (pkg in listOf("com.whatsapp", "com.whatsapp.w4b")) { // WhatsApp, WhatsApp Business
+            try { act.startActivity(Intent(Intent.ACTION_VIEW, uri).setPackage(pkg)); return true }
+            catch (e: android.content.ActivityNotFoundException) { }
+        }
+        return false
+    }
+
+    val sharing get() = app.share.active
+    val shareUntilMs get() = app.share.untilMs
+
+    fun stopSharing() { app.share.stop(); say("Location sharing stopped.") }
+
+    fun toggleSosMethod() {
+        settings.sosMethod = if (settings.sosMethod == "whatsapp") "call" else "whatsapp"
+        say(if (settings.sosMethod == "whatsapp") "S O S opens WhatsApp." else "S O S calls your first contact.")
+    }
+
+    fun cycleShareHours() {
+        settings.shareHours = when (settings.shareHours) { 1 -> 8; 8 -> 15; else -> 1 }
+        say("Live location will be shared for ${settings.shareHours} hours after an S O S.")
     }
 
     // ---------- voice commands ----------
@@ -306,6 +359,7 @@ class AppController(
             Command.Describe -> { go(Screen.ASK); describeScene() }
             Command.Sos -> { go(Screen.SOS); triggerSos() }
             Command.CancelSos -> cancelSos()
+            Command.StopSharing -> stopSharing()
             Command.Repeat -> alerter.repeatLast()
             is Command.Navigate -> { go(Screen.NAV); navigateTo(c.destination) }
             is Command.Ask -> { go(Screen.ASK); askQuestion(c.question) }
@@ -332,6 +386,7 @@ class AppController(
 
     fun deleteAllData() {
         stopNavigation(silent = true)
+        app.share.stop()
         settings.clearAll(); history.clear()
         say("All saved settings, contacts and the server login were deleted.")
     }

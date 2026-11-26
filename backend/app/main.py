@@ -18,7 +18,7 @@ from collections import defaultdict, deque
 import httpx
 from fastapi import Depends, FastAPI, Header, Query, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 
 app = FastAPI(title="BlindNav API", version="0.1")
@@ -492,3 +492,107 @@ async def emergency(req: EmergencyReq, dev: str = Depends(device)):
             except Exception:
                 failed.append(to)
     return {"queued": bool(sent), "sent": sent, "failed": failed}
+
+
+# ---------- live location sharing ----------
+# In memory: a server restart ends all shares (the page then says so). ponytail: add a DB if shares must survive restarts.
+# Anyone holding the share link can see the position until it expires. The id is 128 bits of randomness; treat the link as private.
+def now() -> float:
+    return time.time()
+
+
+_shares: dict[str, dict] = {}
+HEX32 = re.compile(r"^[0-9a-f]{32}$")
+
+
+class TrackStart(BaseModel):
+    hours: int = Field(default=8, ge=1)
+
+
+class TrackUpdate(BaseModel):
+    lat: float = Field(ge=-90, le=90)
+    lon: float = Field(ge=-180, le=180)
+    accuracy_m: float | None = Field(default=None, ge=0)
+
+
+def _public_base(request: Request) -> str:
+    return os.environ.get("BLINDNAV_PUBLIC_URL", str(request.base_url)).rstrip("/")
+
+
+def _share(share_id: str) -> dict:
+    s = _shares.get(share_id) if HEX32.match(share_id) else None
+    if not s:
+        raise ApiError(404, "not_found", "No such share.")
+    return s
+
+
+def _check_token(s: dict, token: str | None):
+    if not token or not hmac.compare_digest(s["token"], token):
+        raise ApiError(403, "forbidden", "Bad share token.")
+    if s["stopped"] or now() > s["expires"]:
+        raise ApiError(410, "share_ended", "This share has ended.")
+
+
+@app.post("/v1/track/start")
+async def track_start(req: TrackStart, request: Request, dev: str = Depends(device)):
+    cap = int(os.environ.get("BLINDNAV_TRACK_MAX_HOURS", "15"))
+    mine = [s for s in _shares.values() if s["device"] == dev and not s["stopped"] and now() < s["expires"]]
+    for old in mine[:-2]:  # at most 3 live shares per device: end the oldest ones
+        old["stopped"] = True
+    sid, hours = secrets.token_hex(16), min(req.hours, cap)
+    _shares[sid] = {"token": secrets.token_urlsafe(24), "device": dev, "expires": now() + hours * 3600, "stopped": False,
+                    "lat": None, "lon": None, "acc": None, "ts": None}
+    return {"id": sid, "update_token": _shares[sid]["token"], "url": f"{_public_base(request)}/t/{sid}",
+            "hours": hours, "expires_at": int(_shares[sid]["expires"])}
+
+
+@app.post("/v1/track/{share_id}/update")
+async def track_update(share_id: str, req: TrackUpdate, x_track_token: str | None = Header(default=None)):
+    s = _share(share_id)
+    _check_token(s, x_track_token)
+    s.update(lat=req.lat, lon=req.lon, acc=req.accuracy_m, ts=now())
+    return {"ok": True}
+
+
+@app.post("/v1/track/{share_id}/stop")
+async def track_stop(share_id: str, x_track_token: str | None = Header(default=None)):
+    s = _share(share_id)
+    if not x_track_token or not hmac.compare_digest(s["token"], x_track_token):
+        raise ApiError(403, "forbidden", "Bad share token.")
+    s["stopped"] = True
+    return {"ok": True}
+
+
+@app.get("/v1/track/{share_id}")
+async def track_get(share_id: str):
+    s = _share(share_id)
+    active = not s["stopped"] and now() <= s["expires"]
+    body = {"active": active, "lat": s["lat"], "lon": s["lon"], "accuracy_m": s["acc"],
+            "seconds_ago": None if s["ts"] is None else int(now() - s["ts"]), "expires_at": int(s["expires"])}
+    return JSONResponse(body, headers={"Cache-Control": "no-store", "X-Robots-Tag": "noindex"})
+
+
+PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Live location</title>
+<style>body{font-family:system-ui,sans-serif;margin:0;padding:24px;background:#111;color:#fff}a.b{display:block;background:#ffeb3b;color:#000;
+padding:20px;border-radius:12px;text-align:center;font-size:22px;margin:20px 0;text-decoration:none}#s{font-size:20px;line-height:1.5}</style></head>
+<body><h1>Live location</h1><p id="s">Loading...</p><a id="m" class="b" href="#" hidden>Open in Google Maps</a>
+<p>Shared from BlindNav. Position may be several metres off and can lag by a minute. If it stops updating, call the person.</p>
+<script>
+const id="__ID__";
+async function tick(){try{
+ const r=await fetch("/v1/track/"+id,{cache:"no-store"});const j=await r.json();const s=document.getElementById("s"),m=document.getElementById("m");
+ if(j.lat===null){s.textContent=j.active?"Sharing started, waiting for the first position...":"Sharing has ended.";}
+ else{const ago=j.seconds_ago;const t=ago<90?ago+" seconds ago":Math.round(ago/60)+" minutes ago";
+  s.textContent=(j.active?"Sharing is ON. ":"Sharing has ENDED. Last position: ")+"Updated "+t+(j.accuracy_m?" (accuracy about "+Math.round(j.accuracy_m)+" m)":"")+". Ends "+new Date(j.expires_at*1000).toLocaleString()+".";
+  m.hidden=false;m.href="https://maps.google.com/?q="+j.lat+","+j.lon;}
+ if(!j.active)clearInterval(h);
+}catch(e){document.getElementById("s").textContent="Cannot reach the server. Retrying...";}}
+tick();const h=setInterval(tick,10000);
+</script></body></html>"""
+
+
+@app.get("/t/{share_id}", response_class=HTMLResponse)
+async def track_page(share_id: str):
+    _share(share_id)  # 404 for unknown ids
+    return HTMLResponse(PAGE.replace("__ID__", share_id), headers={"Cache-Control": "no-store", "X-Robots-Tag": "noindex"})

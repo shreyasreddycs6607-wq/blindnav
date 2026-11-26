@@ -33,14 +33,15 @@ class GuidanceService : LifecycleService() {
         if (intent?.action == ACTION_STOP_GUIDANCE) app.liveOn = false
 
         val wantCamera = app.liveOn && has(Manifest.permission.CAMERA)
-        val wantLocation = app.navOn && has(Manifest.permission.ACCESS_FINE_LOCATION)
+        val sharing = app.share.active
+        val wantLocation = (app.navOn || sharing) && has(Manifest.permission.ACCESS_FINE_LOCATION)
         var types = 0
         if (wantCamera) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
         if (wantLocation) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 
         if (types == 0) { stopAll(app); return START_NOT_STICKY }
         try {
-            ServiceCompat.startForeground(this, NOTIFICATION_ID, notification(wantCamera, wantLocation), types)
+            ServiceCompat.startForeground(this, NOTIFICATION_ID, notification(wantCamera, app.navOn && wantLocation, sharing && wantLocation), types)
         } catch (e: Exception) {
             // Android refused (e.g. camera type started from the background). Say so rather than fail silently.
             app.liveOn = false
@@ -48,6 +49,8 @@ class GuidanceService : LifecycleService() {
             stopAll(app)
             return START_NOT_STICKY
         }
+
+        if (sharing && wantLocation) app.share.ensureRunning()
 
         if (wantCamera) {
             app.camera.start(this) { app.alerter.say("Could not start the camera.", Priority.HAZARD, "en-IN") }
@@ -77,16 +80,18 @@ class GuidanceService : LifecycleService() {
 
     private fun releaseWake() { wake?.takeIf { it.isHeld }?.release(); wake = null }
 
-    private fun notification(camera: Boolean, location: Boolean): android.app.Notification {
+    private fun notification(camera: Boolean, navigation: Boolean, sharing: Boolean): android.app.Notification {
         val nm = getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(NotificationChannel(CHANNEL, "Guidance", NotificationManager.IMPORTANCE_LOW))
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
         val stop = PendingIntent.getService(this, 1, Intent(this, GuidanceService::class.java).setAction(ACTION_STOP_GUIDANCE), PendingIntent.FLAG_IMMUTABLE)
-        val text = when {
-            camera && location -> "Obstacle guidance and navigation are running. This does not replace your cane."
-            camera -> "Obstacle guidance is running. This does not replace your cane."
-            else -> "Navigation is running."
+        val parts = buildList {
+            if (camera) add("obstacle guidance")
+            if (navigation) add("navigation")
+            if (sharing) add("live location sharing")
         }
+        val text = parts.joinToString(", ").replaceFirstChar { it.uppercase() } + " running." +
+            if (camera) " This does not replace your cane." else ""
         return NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_menu_camera)
             .setContentTitle("BlindNav")
@@ -120,7 +125,7 @@ class GuidanceService : LifecycleService() {
         fun sync(context: Context) {
             val app = context.applicationContext as BlindNavApp
             val intent = Intent(context, GuidanceService::class.java)
-            if (app.liveOn || app.navOn) {
+            if (app.liveOn || app.navOn || app.share.active) {
                 // Android refuses to start a foreground service from the background (e.g. while the screen is closing).
                 // Then the running service just keeps its current state.
                 try { ContextCompat.startForegroundService(context, intent) } catch (e: IllegalStateException) { }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
+import com.blindnav.core.Fix
 import com.blindnav.core.LatLon
 import com.blindnav.core.Route
 import com.blindnav.core.Step
@@ -17,6 +18,8 @@ import java.net.URLEncoder
 import java.util.concurrent.Executors
 
 class BackendException(message: String) : Exception(message)
+
+data class Track(val id: String, val token: String, val url: String, val expiresAtSec: Long)
 
 /** Runs blocking work off the main thread and delivers the result back on it. */
 object Bg {
@@ -32,19 +35,21 @@ class Backend(private val s: Settings) {
     private fun base(): String =
         s.backendUrl.trimEnd('/').ifEmpty { throw BackendException("The server address is not set. Add it in Settings.") }
 
-    private fun http(method: String, path: String, body: JSONObject? = null, auth: Boolean = true, retry: Boolean = true): JSONObject {
+    private fun http(method: String, path: String, body: JSONObject? = null, auth: Boolean = true, retry: Boolean = true,
+                     headers: Map<String, String> = emptyMap()): JSONObject {
         try {
             val c = (URL(base() + path).openConnection() as HttpURLConnection).apply {
                 requestMethod = method
                 connectTimeout = 10_000
                 readTimeout = 30_000
                 setRequestProperty("Content-Type", "application/json")
+                headers.forEach { (k, v) -> setRequestProperty(k, v) }
                 if (auth) setRequestProperty("Authorization", "Bearer " + token())
                 if (body != null) { doOutput = true; outputStream.use { it.write(body.toString().toByteArray()) } }
             }
             val code = c.responseCode
             val text = (if (code < 400) c.inputStream else c.errorStream)?.bufferedReader()?.readText().orEmpty()
-            if (code == 401 && auth && retry) { s.token = ""; return http(method, path, body, auth, false) }
+            if (code == 401 && auth && retry) { s.token = ""; return http(method, path, body, auth, false, headers) }
             if (code >= 400) {
                 val msg = runCatching { JSONObject(text).getJSONObject("error").getString("message") }.getOrDefault("Server error $code.")
                 throw BackendException(msg)
@@ -107,6 +112,21 @@ class Backend(private val s: Settings) {
             .map { Step(it.getString("instruction"), LatLon(it.getDouble("lat"), it.getDouble("lon"))) }
         val path = j.getJSONArray("path").let { a -> (0 until a.length()).map { a.getJSONArray(it).let { p -> LatLon(p.getDouble(0), p.getDouble(1)) } } }
         return Route(steps, path) to j.getInt("distance_m")
+    }
+
+    /** Starts a live location share on the server. Anyone with [Track.url] can watch until it expires. */
+    fun trackStart(hours: Int): Track = http("POST", "/v1/track/start", JSONObject().put("hours", hours)).let {
+        Track(it.getString("id"), it.getString("update_token"), it.getString("url"), it.getLong("expires_at"))
+    }
+
+    fun trackUpdate(t: Track, fix: Fix) {
+        http("POST", "/v1/track/${t.id}/update",
+            JSONObject().put("lat", fix.pos.lat).put("lon", fix.pos.lon).put("accuracy_m", fix.accuracyM.toDouble()),
+            auth = false, headers = mapOf("X-Track-Token" to t.token))
+    }
+
+    fun trackStop(t: Track) {
+        runCatching { http("POST", "/v1/track/${t.id}/stop", JSONObject(), auth = false, headers = mapOf("X-Track-Token" to t.token)) }
     }
 
     /** Returns the numbers that were sent. */
