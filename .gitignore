@@ -1,0 +1,13 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+.env
+*.env
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+*.apk
+*.wav
