@@ -1,0 +1,33 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-26T12:00:00Z" },
+  "title": "BlindNav Design System",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 393, "h": 852, "title": "01 Splash" },
+    "Onboarding1.dc.html": { "x": 473, "y": 0, "w": 393, "h": 852, "title": "02a Onboarding: Understand your world" },
+    "Onboarding2.dc.html": { "x": 946, "y": 0, "w": 393, "h": 852, "title": "02b Onboarding: Navigate with confidence" },
+    "Onboarding3.dc.html": { "x": 1419, "y": 0, "w": 393, "h": 852, "title": "02c Onboarding: Your intelligent companion" },
+    "Home.dc.html": { "x": 0, "y": 972, "w": 393, "h": 852, "title": "03 Home dashboard" },
+    "LiveVision.dc.html": { "x": 473, "y": 972, "w": 393, "h": 852, "title": "04 Live vision" },
+    "Navigation.dc.html": { "x": 946, "y": 972, "w": 393, "h": 852, "title": "05 Navigation" },
+    "Assistant.dc.html": { "x": 1419, "y": 972, "w": 393, "h": 852, "title": "06 AI assistant" },
+    "Reader.dc.html": { "x": 0, "y": 1944, "w": 393, "h": 852, "title": "07 Text reader" },
+    "Settings.dc.html": { "x": 473, "y": 1944, "w": 393, "h": 852, "title": "08 Settings" },
+    "DesignSystem.dc.html": { "x": 0, "y": 3200, "w": 1000, "h": 1180, "title": "Design system: colour, type, spacing" },
+    "Components.dc.html": { "x": 1080, "y": 3200, "w": 1000, "h": 1180, "title": "Component library" },
+    "MotionAccessibility.dc.html": { "x": 2160, "y": 3200, "w": 1000, "h": 1180, "title": "Motion and accessibility specification" }
+  },
+  "order": [
+    "Main.dc.html", "Onboarding1.dc.html", "Onboarding2.dc.html", "Onboarding3.dc.html",
+    "Home.dc.html", "LiveVision.dc.html", "Navigation.dc.html", "Assistant.dc.html",
+    "Reader.dc.html", "Settings.dc.html",
+    "DesignSystem.dc.html", "Components.dc.html", "MotionAccessibility.dc.html"
+  ],
+  "notes": {
+    "t-screens": { "x": 0, "y": -300, "text": "BLINDNAV · SEE BEYOND VISION · the eight screens", "kind": "title1", "maxW": 1812 },
+    "t-system": { "x": 0, "y": 2900, "text": "Design system · components · motion and accessibility", "kind": "title1", "maxW": 3160 }
+  },
+  "designSystems": []
+}

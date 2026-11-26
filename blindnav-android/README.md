@@ -3,6 +3,9 @@
 **Assistive only. Not a substitute for a white cane or guide dog. Not safety-certified, not field-validated.**
 Everything here compiled and its unit tests pass, but the app has **never been run on a phone**. Expect to find bugs when you test.
 
+## Look and feel
+The screens follow the BlindNav design canvas (obsidian, emerald, gold, titanium; Inter, Cinzel, Rajdhani, Orbitron fonts, all open-licence, bundled in `res/font`). Tokens are in `Brand.kt`; the animated YGGDRASIL emblem is `Emblem`. Animations stop when Android animations are off. Not in the app (designed only): the camera preview with detection overlays, the compass, the live transcript view, and Profile/History.
+
 ## Install and run
 1. Easiest: open this folder in Android Studio and press Run with your phone connected (USB debugging on, Android 12+).
 2. Or install the APK built here: `app/build/outputs/apk/debug/app-debug.apk` (about 149 MB, debug build).

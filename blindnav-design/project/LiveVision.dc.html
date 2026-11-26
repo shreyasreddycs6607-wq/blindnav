@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live vision</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ph">
+  <!-- camera preview: dominant element. Illustrative scene, not a real photo. -->
+  <div style="position:absolute;left:0;top:0;width:393px;height:612px;overflow:hidden;background:linear-gradient(#0c1210,#16201c 55%,#0f1512)" role="img" aria-label="Camera preview. A post stands ahead and a person is on the left.">
+    <svg viewBox="0 0 393 612" width="393" height="612" aria-hidden="true" style="position:absolute;inset:0">
+      <polygon points="0,612 393,612 232,292 160,292" fill="#111916"/>
+      <polygon points="0,150 150,250 150,330 0,420" fill="#0b100e" stroke="#A7ADB4" stroke-opacity=".16"/>
+      <polygon points="393,130 242,250 242,330 393,440" fill="#0b100e" stroke="#A7ADB4" stroke-opacity=".16"/>
+      <line x1="0" y1="612" x2="160" y2="292" stroke="#A7ADB4" stroke-opacity=".25"/><line x1="393" y1="612" x2="232" y2="292" stroke="#A7ADB4" stroke-opacity=".25"/>
+      <line x1="150" y1="612" x2="186" y2="292" stroke="#A7ADB4" stroke-opacity=".12" stroke-dasharray="14 18"/><line x1="243" y1="612" x2="206" y2="292" stroke="#A7ADB4" stroke-opacity=".12" stroke-dasharray="14 18"/>
+      <circle cx="98" cy="352" r="16" fill="#23302a"/>
+      <path d="M98 368v110M98 384l-26 40M98 384l26 40M98 478l-18 90M98 478l18 90" fill="none" stroke="#23302a" stroke-width="14" stroke-linecap="round"/>
+      <rect x="203" y="388" width="22" height="86" rx="4" fill="#2b3933"/><rect x="199" y="470" width="30" height="8" rx="3" fill="#1b2622"/>
+    </svg>
+    <div class="scanline"></div>
+
+    <!-- detection: person, CAUTION (amber, dashed, triangle + word) -->
+    <div style="position:absolute;left:46px;top:324px;width:112px;height:262px;border:2px dashed var(--warn);border-radius:6px"></div>
+    <div style="position:absolute;left:46px;top:296px;height:28px;display:flex;align-items:center;gap:6px;padding:0 8px;background:var(--warn);color:#090B0A;border-radius:4px 4px 0 0" class="hud">
+      <svg class="ic" style="width:16px;height:16px;stroke-width:2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/></svg>
+      <span style="font-size:13px">Caution · Person · Left</span>
+    </div>
+
+    <!-- detection: post ahead, CRITICAL (red, pulsing, STOP word) -->
+    <div class="alertpulse" style="position:absolute;left:186px;top:372px;width:58px;height:118px;border:3px solid var(--crit);border-radius:6px"></div>
+    <div style="position:absolute;left:186px;top:342px;height:30px;display:flex;align-items:center;gap:6px;padding:0 8px;background:var(--crit);color:#fff;border-radius:4px 4px 0 0;white-space:nowrap" class="hud">
+      <svg class="ic" style="width:16px;height:16px;stroke-width:2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+      <span style="font-size:14px">Stop · Post · Ahead</span>
+    </div>
+
+    <!-- HUD: status + direction strip -->
+    <div style="position:absolute;left:14px;right:14px;top:34px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="pill" role="status"><span class="dot"></span>Vision active · <span class="num" style="font-size:12px;letter-spacing:.04em">12 FPS</span></span>
+        <span class="pill">On-device</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ti);border-radius:12px;background:rgba(9,11,10,.72);overflow:hidden">
+        <div style="padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:6px;border-right:1px solid var(--line)"><svg class="ic" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span class="hud" style="font-size:13px">Left</span><span class="num" style="font-size:14px;color:var(--warn)">1</span></div>
+        <div style="padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:6px;border-right:1px solid var(--line);background:rgba(239,68,68,.22)"><svg class="ic" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg><span class="hud" style="font-size:13px">Ahead</span><span class="num" style="font-size:14px;color:#fff">1</span></div>
+        <div style="padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:6px"><svg class="ic" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="hud" style="font-size:13px">Right</span><span class="num" style="font-size:14px">0</span></div>
+      </div>
+    </div>
+    <div class="brk" style="position:absolute;left:10px;right:10px;top:10px;bottom:10px;pointer-events:none"></div>
+  </div>
+
+  <!-- control panel -->
+  <div style="position:absolute;left:0;right:0;top:612px;height:240px;background:var(--bg);border-top:1px solid var(--gold);padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px">
+    <div class="card" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-color:rgba(0,255,156,.35)">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6"/></svg>
+      <div style="min-width:0">
+        <div class="hud" style="font-size:11px;color:var(--gold)">Spoken just now</div>
+        <div style="font-size:16px;line-height:1.3;font-weight:600">“Stop. Post ahead. Person slightly left.”</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="pill">Alerts: tone + haptic</span>
+      <span class="pill" style="color:var(--tx2)">Everything shown is spoken</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:10px;margin-top:auto">
+      <a href="LiveVision.dc.html" class="btn s" style="min-height:64px;flex-direction:column;gap:2px;font-size:13px;padding:0 6px;letter-spacing:.1em"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>PAUSE</a>
+      <a href="Assistant.dc.html" class="btn" style="min-height:64px;flex-direction:column;gap:2px;font-size:13px;padding:0 6px;letter-spacing:.1em"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>DESCRIBE</a>
+      <a href="Settings.dc.html" class="btn s" style="min-height:64px;flex-direction:column;gap:2px;font-size:13px;padding:0 6px;letter-spacing:.1em"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6"/></svg>VOICE</a>
+    </div>
+    <div style="font-size:12px;color:var(--tx2);text-align:center">Assists only. Keep using your cane or guide dog.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

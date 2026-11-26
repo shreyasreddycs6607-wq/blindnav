@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Motion and accessibility specification</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}h2.sec{font:600 14px Rajdhani,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}.tr{display:grid;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.45;align-items:start}.tr:last-child{border-bottom:0}.th{font:600 11px Rajdhani,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ti)}.k{color:#fff;font-weight:700}ul.l{margin:0;padding-left:18px;font-size:14px;line-height:1.55;color:var(--tx2)}ul.l li{margin-bottom:3px}ul.l b{color:#fff}</style>
+</helmet>
+<div style="position:relative;width:1000px;height:1180px;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif;padding:44px 48px;display:flex;flex-direction:column;gap:22px;overflow:hidden">
+
+  <div>
+    <div class="cin" style="font-size:28px;font-weight:700;letter-spacing:.14em">Motion and accessibility</div>
+    <div class="goldline" style="margin-top:10px"></div>
+    <p style="margin:12px 0 0;font-size:15px;line-height:1.5;color:var(--tx2);max-width:860px">Non-negotiable: BlindNav must work with no sight at all. The screen is a courtesy for sighted helpers. Every visual signal has a spoken one, and every animation has a still equivalent.</p>
+  </div>
+
+  <section class="card" style="padding:16px 20px">
+    <h2 class="sec">Animation system · all stop when Android “remove animations” or reduced motion is on</h2>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;padding-top:0"><span class="th">Demo</span><span class="th">Name · trigger</span><span class="th">Spec</span><span class="th">Reduced-motion version</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><svg viewBox="0 0 40 40" width="56" height="56" aria-hidden="true"><g class="breathe"><circle cx="20" cy="20" r="14" fill="#00FF9C" fill-opacity=".35"/><circle cx="20" cy="20" r="8" fill="#00FF9C"/></g></svg></div><span class="k">AI core breathe<br><span style="font-weight:400;color:var(--tx2)">Home, always</span></span><span>Scale .96 to 1.04 with opacity .85 to 1. 4 s, ease in-out, loop.</span><span>Static at scale 1.0.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><svg viewBox="0 0 40 40" width="56" height="56" aria-hidden="true"><g class="spin"><circle cx="20" cy="20" r="17" fill="none" stroke="#D4AF37" stroke-width="2" stroke-dasharray="1.5 5"/></g><g class="spinr"><polygon points="20,6 34,20 20,34 6,20" fill="none" stroke="#A7ADB4" stroke-width="1.5"/></g></svg></div><span class="k">Rotating rings<br><span style="font-weight:400;color:var(--tx2)">Splash, Home</span></span><span>Gold ring 28 s and titanium diamond 42 s, opposite directions, linear, loop.</span><span>Rings fixed at 0°.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><div style="position:relative;width:34px;height:34px"><div class="rip"></div><div class="rip b"></div><div style="position:absolute;inset:0;border-radius:50%;background:#064E3B;border:2px solid #00FF9C"></div></div></div><span class="k">Listening waves<br><span style="font-weight:400;color:var(--tx2)">Microphone open</span></span><span>Three rings expand .7× to 1.7× and fade, 2.4 s, 0.8 s stagger. Waveform bars follow input level.</span><span>One still ring and the word “Listening”.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><svg viewBox="0 0 40 40" width="56" height="56" aria-hidden="true"><g class="spinf"><polygon points="20,5 33,12.5 33,27.5 20,35 7,27.5 7,12.5" fill="none" stroke="#00FF9C" stroke-width="2" stroke-dasharray="26 12"/></g></svg></div><span class="k">Processing<br><span style="font-weight:400;color:var(--tx2)">AI is thinking</span></span><span>Hexagon rotates 3 s linear. Spoken “One moment” if over 1.5 s.</span><span>Still hexagon plus spoken status.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="position:relative;width:56px;height:40px;margin:0 auto;border:1px solid var(--ti);border-radius:6px;overflow:hidden"><div class="scanline"></div></div><span class="k">Vision scan<br><span style="font-weight:400;color:var(--tx2)">Live vision, Reader</span></span><span>2 px emerald line sweeps top to bottom, 3.2 s linear. Never covers labels.</span><span>No line: corner brackets only.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><svg viewBox="0 0 40 40" width="56" height="56" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#A7ADB4" stroke-opacity=".6"/><path d="M20 7L26 24L20 20L14 24Z" fill="#00FF9C" transform="rotate(20 20 20)"/></svg></div><span class="k">Compass<br><span style="font-weight:400;color:var(--tx2)">Navigation</span></span><span>Arrow follows heading with a 300 ms ease-out, damped so it does not jitter. Heading is spoken at turns.</span><span>Snaps to heading, no easing.</span></div>
+    <div class="tr" style="grid-template-columns:96px 150px 1fr 1fr;align-items:center"><div style="display:flex;justify-content:center"><div class="alertpulse" style="width:46px;height:32px;border:3px solid var(--crit);border-radius:6px"></div></div><span class="k">Critical alert<br><span style="font-weight:400;color:var(--tx2)">Imminent hazard</span></span><span>Red outline pulse 1.2 s plus tone, strong vibration and spoken “Stop”. Visual is the least important part.</span><span>Heavy static outline and the word “STOP”. Tone, vibration and speech unchanged.</span></div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:1.25fr 1fr;gap:18px;min-height:0">
+    <div class="card" style="padding:16px 20px">
+      <h2 class="sec">TalkBack and spoken labels</h2>
+      <div class="tr" style="grid-template-columns:150px 1fr;padding-top:0"><span class="th">Control</span><span class="th">Content description and announcement</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Activate assistance</span><span>“Activate assistance. Starts live guidance. Button.”</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Microphone</span><span>“Microphone. Listening. Double tap to stop.” State changes announced politely.</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">AI core</span><span>“YGGDRASIL. Ready. Camera, GPS and voice online.” Decorative rings hidden from TalkBack.</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Detection boxes</span><span>Hidden from TalkBack. The same facts are spoken as “Stop. Post ahead.” so nobody depends on the overlay.</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Compass</span><span>“Compass. Destination 10 degrees to your right. 420 metres.”</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Language chips</span><span>“Hindi.” Selected one: “English, selected.”</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Stop navigation</span><span>“Stop navigation. Button.” Always the last item, never moves.</span></div>
+      <div class="tr" style="grid-template-columns:150px 1fr"><span class="k">Critical banner</span><span>Assertive live region: interrupts speech immediately.</span></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="card" style="padding:16px 20px">
+        <h2 class="sec">Haptics and sound</h2>
+        <div class="tr" style="grid-template-columns:86px 1fr;padding-top:0"><span class="k">Confirm</span><span>One 20 ms tick</span></div>
+        <div class="tr" style="grid-template-columns:86px 1fr"><span class="k">Information</span><span>One 40 ms pulse</span></div>
+        <div class="tr" style="grid-template-columns:86px 1fr"><span class="k">Caution</span><span>Two 80 ms pulses, 80 ms gap, soft tone</span></div>
+        <div class="tr" style="grid-template-columns:86px 1fr"><span class="k">Critical</span><span>Two 200 ms pulses, 100 ms gap, loud tone, then speech</span></div>
+        <div class="tr" style="grid-template-columns:86px 1fr"><span class="k">Listening</span><span>Short beep when the microphone opens</span></div>
+        <div style="font-size:13px;line-height:1.5;color:var(--tx2);margin-top:6px">Speech priority: SOS, critical hazard, caution, your request, navigation, ambient. A lower one never cuts off a higher one.</div>
+      </div>
+      <div class="card" style="padding:16px 20px">
+        <h2 class="sec">Layout on Android</h2>
+        <ul class="l">
+          <li>Design size <b>393 × 852 dp</b>; fluid from <b>360 to 430 dp</b> wide.</li>
+          <li>Text scales to <b>200%</b> without clipping; screens scroll.</li>
+          <li>Portrait only; respect system insets; bottom bar clear of the gesture area.</li>
+          <li>Theme tokens map one to one to the Compose colour scheme.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="padding:14px 20px">
+    <h2 class="sec">Rules every screen must pass</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+      <ul class="l"><li><b>Voice first:</b> every task can be done by speaking.</li><li><b>Never colour alone:</b> icon, word and border style too.</li><li><b>Spoken status:</b> every state change is announced.</li></ul>
+      <ul class="l"><li><b>Touch:</b> 56 dp minimum, 64 preferred; one action per row.</li><li><b>Focus order:</b> title, primary action, content, secondary, Back last.</li><li><b>Contrast:</b> 4.5:1 for text, 3:1 for icons and borders.</li></ul>
+      <ul class="l"><li><b>Honest:</b> the AI is advisory. It never says a road is safe.</li><li><b>Cane first:</b> “Assists only” is on screen and spoken.</li><li><b>Fails loudly:</b> camera, GPS or AI failure is spoken at once.</li></ul>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

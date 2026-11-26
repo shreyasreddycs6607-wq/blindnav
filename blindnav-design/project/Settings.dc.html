@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ph">
+  <div class="glow"></div>
+  <div class="col" style="gap:8px;padding-top:36px">
+
+    <div style="display:flex;align-items:center;gap:12px;min-height:56px;margin-bottom:4px">
+      <a href="Home.dc.html" class="iconbtn" style="min-width:56px;min-height:56px;border:1px solid var(--line);border-radius:16px"><svg class="ic" viewBox="0 0 24 24" aria-label="Back"><path d="M15 6l-6 6 6 6"/></svg></a>
+      <div style="font-size:24px;font-weight:700">Settings</div>
+    </div>
+
+    <div class="hud" style="font-size:12px;color:var(--gold);margin-top:2px">Voice and language</div>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+      <span style="flex:1">Language</span><span style="font-weight:400;color:var(--tx2);font-size:15px">English (India)</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6"/></svg>
+      <span style="flex:1">Voice</span><span style="font-weight:400;color:var(--tx2);font-size:15px">Clear · Female</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <div class="rowbtn" style="flex-direction:column;align-items:stretch;gap:10px;padding:12px 16px;min-height:80px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span>Speech speed</span><span class="num" style="font-size:16px;color:var(--gold)">1.2×</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><span class="hud" style="font-size:12px;color:var(--tx2)">Slow</span>
+        <div style="position:relative;flex:1;height:6px;border-radius:3px;background:rgba(167,173,180,.28)"><div style="position:absolute;left:0;top:0;bottom:0;width:60%;border-radius:3px;background:var(--neon)"></div><div style="position:absolute;left:60%;top:-9px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:var(--bg);border:3px solid var(--neon)"></div></div>
+        <span class="hud" style="font-size:12px;color:var(--tx2)">Fast</span></div>
+    </div>
+
+    <div class="hud" style="font-size:12px;color:var(--gold);margin-top:6px">Accessibility</div>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4 8v8M20 8v8"/></svg>
+      <span style="flex:1">Haptic feedback</span>
+      <span style="display:flex;align-items:center;gap:8px"><span class="hud" style="font-size:13px;color:var(--neon)">On</span><span style="position:relative;display:block;width:52px;height:30px;border-radius:15px;background:var(--neon)"><i style="position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:50%;background:var(--bg)"></i></span></span>
+    </a>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="M5 9l7 1 7-1M12 10v5M9 21l3-6 3 6"/></svg>
+      <span style="flex:1">TalkBack, text size, motion</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+
+    <div class="hud" style="font-size:12px;color:var(--gold);margin-top:6px">Safety, privacy and AI</div>
+    <a href="Settings.dc.html" class="rowbtn" style="border-color:rgba(239,68,68,.55)">
+      <svg class="ic" style="color:#fff" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>
+      <span style="flex:1">Emergency contacts</span><span style="font-weight:400;color:var(--tx2);font-size:15px">2 saved</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>
+      <span style="flex:1">Privacy controls</span><span style="font-weight:400;color:var(--tx2);font-size:15px">Cloud off</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <a href="Settings.dc.html" class="rowbtn">
+      <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v5M9.5 10.5h5"/></svg>
+      <span style="flex:1">AI preferences</span><span style="font-weight:400;color:var(--tx2);font-size:15px">Brief answers</span>
+      <svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+
+    <div class="hud" style="margin-top:auto;text-align:center;font-size:11px;color:var(--tx2)">BlindNav · See beyond vision · v0.3</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

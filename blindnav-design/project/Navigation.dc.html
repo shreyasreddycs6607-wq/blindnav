@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Navigation</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ph">
+  <div class="glow"></div>
+  <div class="col" style="gap:12px;padding-top:36px">
+
+    <div style="display:flex;align-items:center;gap:12px;min-height:56px">
+      <a href="Home.dc.html" class="iconbtn" style="min-width:56px;min-height:56px;border:1px solid var(--line);border-radius:16px"><svg class="ic" viewBox="0 0 24 24" aria-label="Back"><path d="M15 6l-6 6 6 6"/></svg></a>
+      <div style="min-width:0;flex:1">
+        <div class="hud" style="font-size:11px;color:var(--gold)">Walking to</div>
+        <div style="font-size:20px;font-weight:700;line-height:1.2">City Market, MG Road</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="pill" role="status"><span class="dot"></span>GPS · ±8 m · Good</span>
+      <span class="pill">14 min walk</span>
+    </div>
+
+    <!-- compass -->
+    <div style="display:flex;justify-content:center;margin:2px 0">
+      <svg viewBox="0 0 260 260" width="268" height="268" role="img" aria-label="Compass. Your destination is slightly to your right, at 10 degrees.">
+        <circle cx="130" cy="130" r="124" fill="none" stroke="#A7ADB4" stroke-opacity=".3"/>
+        <g class="spinr" style="animation-duration:90s"><circle cx="130" cy="130" r="116" fill="none" stroke="#A7ADB4" stroke-opacity=".7" stroke-dasharray="2 10.2"/></g>
+        <circle cx="130" cy="130" r="100" fill="#101815" stroke="#064E3B" stroke-width="2"/>
+        <circle cx="130" cy="130" r="82" fill="none" stroke="#D4AF37" stroke-opacity=".6" stroke-dasharray="1.5 6"/>
+        <text x="130" y="30" text-anchor="middle" font-family="Rajdhani,sans-serif" font-weight="700" font-size="18" fill="#D4AF37">N</text>
+        <text x="236" y="136" text-anchor="middle" font-family="Rajdhani,sans-serif" font-weight="700" font-size="16" fill="#A7ADB4">E</text>
+        <text x="130" y="248" text-anchor="middle" font-family="Rajdhani,sans-serif" font-weight="700" font-size="16" fill="#A7ADB4">S</text>
+        <text x="24" y="136" text-anchor="middle" font-family="Rajdhani,sans-serif" font-weight="700" font-size="16" fill="#A7ADB4">W</text>
+        <g transform="rotate(10 130 130)">
+          <path d="M130 52L158 150L130 132L102 150Z" fill="#00FF9C"/>
+          <path d="M130 132L130 190" stroke="#00FF9C" stroke-opacity=".4" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 8"/>
+        </g>
+        <circle cx="130" cy="130" r="6" fill="#090B0A" stroke="#D4AF37" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div style="display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:-6px">
+      <span class="num" style="font-size:52px;line-height:1">420</span><span class="hud" style="font-size:20px;color:var(--ti)">metres</span>
+    </div>
+
+    <div class="card" style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-color:rgba(0,255,156,.4)">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--em);display:flex;align-items:center;justify-content:center;color:var(--neon);flex:none">
+        <svg class="ic" style="width:30px;height:30px" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 20V10a4 4 0 014-4h5M14 2l4 4-4 4"/></svg>
+      </div>
+      <div>
+        <div class="hud" style="font-size:11px;color:var(--gold)">Next turn</div>
+        <div style="font-size:18px;font-weight:700;line-height:1.25">In 40 m, turn left onto Brigade Road</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="card" style="padding:10px 12px;display:flex;align-items:center;gap:10px">
+        <svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div><div class="hud" style="font-size:11px;color:var(--tx2)">Obstacle watch</div><div style="font-size:14px;font-weight:700">On</div></div>
+      </div>
+      <div class="card" style="padding:10px 12px;display:flex;align-items:center;gap:10px">
+        <div class="wv" style="height:24px;gap:3px"><i style="width:3px"></i><i style="width:3px"></i><i style="width:3px"></i><i style="width:3px"></i><i style="width:3px"></i></div>
+        <div><div class="hud" style="font-size:11px;color:var(--tx2)">Voice guide</div><div style="font-size:14px;font-weight:700">Speaking</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:12px;line-height:1.4;color:var(--tx2);text-align:center">Walking directions only. They do not detect crossings. Use your cane or guide dog.</div>
+      <a href="Home.dc.html" class="btn d" style="min-height:68px;font-size:18px;letter-spacing:.1em">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        STOP NAVIGATION
+      </a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

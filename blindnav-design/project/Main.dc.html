@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Splash</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ph">
+  <div class="glow"></div>
+  <div class="col" style="align-items:center;justify-content:center;padding:40px 28px 32px">
+    <div style="margin-top:-30px;display:flex;flex-direction:column;align-items:center;gap:36px">
+      <svg viewBox="0 0 200 200" width="248" height="248" role="img" aria-label="BlindNav emblem: a stylised world tree inside rotating emerald and gold rings">
+        <defs><radialGradient id="gs" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#00FF9C" stop-opacity=".45"/><stop offset="1" stop-color="#064E3B" stop-opacity="0"/></radialGradient></defs>
+        <g class="breathe"><circle cx="100" cy="100" r="66" fill="url(#gs)"/></g>
+        <g class="spin"><circle cx="100" cy="100" r="94" fill="none" stroke="#D4AF37" stroke-width="2" stroke-dasharray="1.5 11.4" stroke-linecap="round"/><circle cx="100" cy="100" r="86" fill="none" stroke="#D4AF37" stroke-width="1" opacity=".7"/></g>
+        <g class="spinr"><polygon points="173.9,130.6 130.6,173.9 69.4,173.9 26.1,130.6 26.1,69.4 69.4,26.1 130.6,26.1 173.9,69.4" fill="none" stroke="#A7ADB4" stroke-width="1.2" opacity=".8"/><polygon points="100,32 168,100 100,168 32,100" fill="none" stroke="#D4AF37" stroke-width="1" opacity=".6"/></g>
+        <circle cx="100" cy="100" r="58" fill="none" stroke="#064E3B" stroke-width="3"/>
+        <circle cx="100" cy="100" r="58" fill="none" stroke="#00FF9C" stroke-width="1.5" stroke-dasharray="90 274.4"/>
+        <path d="M100 134V72M100 100L80 80M100 100L120 80M100 120L84 136M100 120L116 136" stroke="#00FF9C" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="100" cy="68" r="4" fill="#D4AF37"/><circle cx="78" cy="78" r="3.5" fill="#D4AF37"/><circle cx="122" cy="78" r="3.5" fill="#D4AF37"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <h1 class="cin" style="margin:0;font-size:40px;font-weight:700;letter-spacing:.2em;padding-left:.2em">BLINDNAV</h1>
+        <div class="goldline"></div>
+        <div class="hud" style="font-size:15px;color:var(--ti);letter-spacing:.34em;padding-left:.34em">See beyond vision</div>
+      </div>
+    </div>
+    <div style="position:absolute;left:28px;right:28px;bottom:36px;display:flex;flex-direction:column;gap:16px">
+      <div class="loadbar" role="progressbar" aria-label="Starting YGGDRASIL"><i></i></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="hud" style="font-size:12px;color:var(--tx2)">YGGDRASIL · initialising</span>
+        <span class="hud" style="font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:6px">
+          <svg class="ic" style="width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6"/></svg>
+          Voice on
+        </span>
+      </div>
+      <div style="font-size:14px;line-height:1.5;color:var(--tx2);text-align:center">Spoken on launch: “BlindNav. See beyond vision. Ready.”</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":393,"height":852}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Component library</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="bn.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0}h2.sec{font:600 14px Rajdhani,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 12px}.note{font-size:13px;line-height:1.5;color:var(--tx2);margin-top:8px}.cell{display:flex;flex-direction:column;gap:8px}.cap{font:600 12px Rajdhani,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ti)}</style>
+</helmet>
+<div style="position:relative;width:1000px;height:1180px;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif;padding:48px;display:flex;flex-direction:column;gap:28px;overflow:hidden">
+
+  <div>
+    <div class="cin" style="font-size:30px;font-weight:700;letter-spacing:.14em">Component library</div>
+    <div class="goldline" style="margin-top:10px"></div>
+  </div>
+
+  <section>
+    <h2 class="sec">Buttons · 64 px tall, 18 px radius, label always visible</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+      <div class="cell"><a href="Components.dc.html" class="btn">Primary</a><span class="cap">Neon fill · one per screen</span></div>
+      <div class="cell"><a href="Components.dc.html" class="btn s">Secondary</a><span class="cap">Titanium outline</span></div>
+      <div class="cell"><a href="Components.dc.html" class="btn g">Gold outline</a><span class="cap">Premium, rare</span></div>
+      <div class="cell"><a href="Components.dc.html" class="btn d"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Stop</a><span class="cap">Critical · icon + word</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Status pills · state is always text, never colour alone</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <span class="pill"><span class="dot"></span>System ready</span>
+      <span class="pill" style="border-color:var(--warn);color:var(--warn)"><svg class="ic" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/></svg>GPS weak</span>
+      <span class="pill" style="border-color:var(--crit);color:#fff;background:rgba(239,68,68,.2)"><svg class="ic" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>Camera lost</span>
+      <span class="pill" style="border-color:var(--ok);color:var(--ok)"><svg class="ic" style="width:16px;height:16px" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Route found</span>
+      <span class="pill"><span class="num" style="font-size:12px">12 FPS</span>On-device</span>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Detection labels · three severities, each differs in icon, word, border style and position</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <div class="cell"><div style="position:relative;height:96px;border:2px solid var(--neon);border-radius:6px;background:rgba(0,255,156,.05)"><div class="hud" style="position:absolute;left:-2px;top:-26px;height:26px;display:flex;align-items:center;padding:0 8px;background:var(--neon);color:#090B0A;font-size:13px;border-radius:4px 4px 0 0">Door · Right</div></div><span class="cap" style="margin-top:20px">Information · solid</span></div>
+      <div class="cell"><div style="position:relative;height:96px;border:2px dashed var(--warn);border-radius:6px"><div class="hud" style="position:absolute;left:-2px;top:-26px;height:26px;display:flex;align-items:center;gap:6px;padding:0 8px;background:var(--warn);color:#090B0A;font-size:13px;border-radius:4px 4px 0 0"><svg class="ic" style="width:16px;height:16px;stroke-width:2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/></svg>Caution · Person</div></div><span class="cap" style="margin-top:20px">Caution · dashed + triangle</span></div>
+      <div class="cell"><div class="alertpulse" style="position:relative;height:96px;border:3px solid var(--crit);border-radius:6px"><div class="hud" style="position:absolute;left:-3px;top:-27px;height:27px;display:flex;align-items:center;gap:6px;padding:0 8px;background:var(--crit);color:#fff;font-size:13px;border-radius:4px 4px 0 0"><svg class="ic" style="width:16px;height:16px;stroke-width:2.4" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>Stop · Post</div></div><span class="cap" style="margin-top:20px">Critical · heavy + pulse + “Stop”</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Alert banner · critical alerts also play a tone and a strong vibration</h2>
+    <div class="alertpulse" style="display:flex;align-items:center;gap:16px;padding:16px 20px;border:2px solid var(--crit);border-radius:20px;background:rgba(239,68,68,.14)" role="alert">
+      <svg class="ic" style="width:34px;height:34px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+      <div style="flex:1"><div class="hud" style="font-size:13px;color:#fff">Critical · spoken immediately</div><div style="font-size:20px;font-weight:700">Stop. Post ahead.</div></div>
+      <span class="btn d" style="min-height:56px;font-size:16px">Dismiss</span>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div>
+      <h2 class="sec">Cards</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card" style="padding:14px 16px;border-color:var(--gold);border-radius:18px 18px 18px 4px"><div class="hud" style="font-size:12px;color:var(--gold)">YGGDRASIL · response</div><div style="font-size:17px;line-height:1.45;margin-top:4px">There is a pedestrian ahead, slightly to your left.</div></div>
+        <div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-color:rgba(0,255,156,.4)"><div style="width:48px;height:48px;border-radius:14px;background:var(--em);display:flex;align-items:center;justify-content:center;color:var(--neon);flex:none"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 20V10a4 4 0 014-4h5M14 2l4 4-4 4"/></svg></div><div><div class="hud" style="font-size:11px;color:var(--gold)">Next turn</div><div style="font-size:16px;font-weight:700">In 40 m, turn left</div></div></div>
+      </div>
+    </div>
+    <div>
+      <h2 class="sec">Function tile and list row</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="Components.dc.html" class="rowbtn" style="min-height:76px"><svg class="ic" style="color:var(--neon);width:28px;height:28px" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span><span class="hud" style="font-size:16px;display:block">Explore</span><span style="font-size:12px;font-weight:400;color:var(--tx2)">What is around me</span></span></a>
+        <a href="Components.dc.html" class="rowbtn"><svg class="ic" style="color:var(--neon)" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span style="flex:1">Language</span><span style="font-weight:400;color:var(--tx2);font-size:15px">English</span><svg class="ic" style="color:var(--ti)" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:20px">
+    <div>
+      <h2 class="sec">Controls</h2>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><span class="btn" style="min-height:56px;font-size:15px;padding:0">EN</span><span class="btn s" style="min-height:56px;font-size:15px;padding:0">हिं</span><span class="btn s" style="min-height:56px;font-size:15px;padding:0">ಕನ್ನ</span><span class="btn s" style="min-height:56px;font-size:15px;padding:0">తెలు</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-size:16px;font-weight:600;flex:1">Haptic feedback</span><span class="hud" style="font-size:13px;color:var(--neon)">On</span><span style="position:relative;display:block;width:52px;height:30px;border-radius:15px;background:var(--neon)"><i style="position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:50%;background:var(--bg)"></i></span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="hud" style="font-size:12px;color:var(--tx2)">Slow</span><div style="position:relative;flex:1;height:6px;border-radius:3px;background:rgba(167,173,180,.28)"><div style="position:absolute;left:0;top:0;bottom:0;width:60%;border-radius:3px;background:var(--neon)"></div><div style="position:absolute;left:60%;top:-9px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:var(--bg);border:3px solid var(--neon)"></div></div><span class="num" style="font-size:14px;color:var(--gold)">1.2×</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <h2 class="sec" style="align-self:flex-start">Microphone</h2>
+      <div style="position:relative;width:96px;height:96px;margin:8px 0 12px"><div class="rip"></div><div class="rip b"></div><div class="rip c"></div><div style="position:absolute;inset:0;border-radius:50%;background:var(--em);border:2px solid var(--neon);display:flex;align-items:center;justify-content:center;color:var(--neon)"><svg class="ic" style="width:40px;height:40px" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div></div>
+      <div class="wv" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <h2 class="sec" style="align-self:flex-start">Bottom bar</h2>
+      <div style="display:flex;gap:4px;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">
+        <span class="iconbtn" style="min-width:76px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Profile</span>
+        <span class="iconbtn" style="min-width:76px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</span>
+        <span class="iconbtn" style="min-width:76px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Settings</span>
+      </div>
+      <p class="note" style="text-align:center">Icon + word, 64 px wide minimum</p>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
